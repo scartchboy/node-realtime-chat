@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const admin = require('firebase-admin')
 
@@ -5,8 +6,11 @@ const bodyParser = require('body-parser')
 const serviceAccount = require('./firebase-service-account.json')
 const routes = require('./src/v1/routes/index')
 const app = express()
+var port = process.env.PORT || 8000
 
-const server = app.listen(5000, "0.0.0.0", () => console.log('connected to server server'))
+const server = app.listen(port , '0.0.0.0', () =>
+  console.log('connected to server server'),
+)
 const io = require('socket.io')(server)
 
 admin.initializeApp({
