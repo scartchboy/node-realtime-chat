@@ -6,7 +6,7 @@ const serviceAccount = require('./firebase-service-account.json')
 const routes = require('./src/v1/routes/index')
 const app = express()
 
-const server = app.listen(5000, () => console.log('connected to server server'))
+const server = app.listen(5000, "0.0.0.0", () => console.log('connected to server server'))
 const io = require('socket.io')(server)
 
 admin.initializeApp({
