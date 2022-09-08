@@ -7,8 +7,9 @@ const serviceAccount = require('./firebase-service-account.json')
 const routes = require('./src/v1/routes/index')
 const app = express()
 var port = process.env.PORT || 8000
+var hostname = process.env.HOSTNAME || '0.0.0.0'
 
-const server = app.listen(port, '0.0.0.0', () =>
+const server = app.listen(port, hostname, () =>
   console.log('connected to server server'),
 )
 const io = require('socket.io')(server)
@@ -19,10 +20,8 @@ admin.initializeApp({
 
 io.on('connection', (socket) => {
   console.log('connected successfully', socket.id)
-
   socket.on('message', (data) => {
-    console.log(data)
-    socket.broadcast.emit('message-receiver',data )
+    io.emit('messaging', data)
   })
 })
 
