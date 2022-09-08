@@ -9,7 +9,7 @@ const app = express()
 var port = process.env.PORT || 8000
 var hostname = process.env.HOSTNAME || '0.0.0.0'
 
-const server = app.listen(port, hostname, () =>
+const server = app.listen(port, '0.0.0.0', () =>
   console.log('connected to server server'),
 )
 const io = require('socket.io')(server)
