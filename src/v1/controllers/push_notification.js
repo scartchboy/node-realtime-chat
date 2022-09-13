@@ -1,40 +1,17 @@
 const admin = require('firebase-admin')
 
+const { sendNotificationToTopic } = require('../../utils/firebase_notification')
+
 pushNotificationToTopic = async (req, res, next) => {
   const notificationTitle = req.body.title
   const notificationDescription = req.body.body
   const topic = req.body.topic
-
-  try {
-    const message = {
-      notification: {
-        title: notificationTitle,
-        body: notificationDescription,
-      },
-      android: {
-        notification: {
-          imageUrl: 'https://foo.bar.pizza-monster.png'
-        }
-      },
-      data: {
-        type: 'warning',
-        content: 'A new weather warning has been created!',
-      },
-      topic: topic,
-    }
-    await admin
-      .messaging()
-      .send(message)
-      .then((response) => {
-        console.log('Successfully sent message:', response)
-        res.json(response)
-      })
-      .catch((error) => {
-        console.log('Error sending message:', error)
-      })
-  } catch (e) {
-    res.send('Notification sent failed')
-  }
+  const response = await sendNotificationToTopic(
+    notificationTitle,
+    notificationDescription,
+    topic,
+  )
+  res.json(response)
 }
 
 pushNotificationToSpecificDevice = async (req, res, next) => {
@@ -52,18 +29,18 @@ pushNotificationToSpecificDevice = async (req, res, next) => {
     apns: {
       payload: {
         aps: {
-          'mutable-content': 1
-        }
+          'mutable-content': 1,
+        },
       },
       fcm_options: {
-        image: 'https://foo.bar.pizza-monster.png'
-      }
+        image: 'https://foo.bar.pizza-monster.png',
+      },
     },
     webpush: {
       headers: {
-        image: 'https://foo.bar.pizza-monster.png'
-      }
-    }, 
+        image: 'https://foo.bar.pizza-monster.png',
+      },
+    },
     data: {
       type: 'warning',
       content: 'A new weather warning has been created!',
